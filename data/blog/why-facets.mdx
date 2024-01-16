@@ -1,0 +1,106 @@
+---
+title: Why RichText facets in Bluesky
+date: '2024-01-15'
+tags: ['atproto', 'bsky']
+draft: false
+summary: Today in "our novel form of NIH," why does Bluesky use the richtext facets system instead of Markdown?
+images: []
+---
+
+It's a good idea to jot down a couple of notes on our decision-making at Bluesky. These notes won't be extensive.
+
+## Richtext in Bluesky
+
+When you see a post like this, you're seeing what we call richtext:
+
+![A post with a mention and a URL link](/static/images/why-facets/post-with-richtext.png)
+
+That's a `mention` and a `link`. In the future there will likely be a `bold` or `italics` or `strikethrough`<sup>1</sup>, but right now we just have mention and link.
+
+## Why not Markdown
+
+How should this be encoded? The obvious answer is Markdown. You could do mentions as a kind of special-case link for instance.
+
+```markdown
+Hey [@dholms.xyz](user:dholms.xyz) check out [https://example.com](https://example.com)
+```
+
+There's three problems.<sup>2</sup>
+
+### Problem 1: Syntax barfing
+
+Suppose you want to add a behavior that markdown doesn't usually support, like spoiler tags<sup>1</sup>.
+
+You invent something like `||spoiler||` and deploy it in your client. Problem? Yes! Since this is an open network with lots of clients &mdash; none of which you spoke to first &mdash; the other clients start barfing that syntax rather than doing the correct behavior.
+
+![A post that's barfing syntax](/static/images/why-facets/syntax-barf.png)
+
+Whoopsie. The issue here isn't the intent-violation (though that's bad). The issue we're focusing on is that users are seeing the double-bars in the post.
+
+Now imagine you're implementing colored text. Something like `{color=hex}text{/color}`. Your client? looks great. Everybody else? this:
+
+![Another post that's barfing syntax](/static/images/why-facets/syntax-barf-2.png)
+
+That's a real problem. Your end-users won't even know why it's happening; they'll just get these replies like "wtf is that" and eventually decide some features are broken so it's best not to use them.
+
+We need to be thinking about elegant fallbacks in an environment where clients want to innovate &mdash; otherwise we get decision paralysis. Nobody wants to deploy a new feature if lack of universal support will mean syntax barfing.
+
+### Problem 2: Parsing sucks
+
+Most languages a good markdown parsers, but if you extend the syntax, that's not true anymore.
+
+Your markdown variation is going to need a library for every environment. Those libraries are going to need to be updated for every new syntax extension. People are going to get it wrong, or make different choices. You might have security risks from parsing mistakes.
+
+Aside from all that, suppose we use that link syntax for mentions I referenced above `[@username](user:username)` and you're ingesting posts to create a mentions index. Guess what? You gotta parse every single post to detect the mentions. That's needless overhead.
+
+We don't beat all the allegations on this front, but it's generally better to use established systems for non-trivial code work. Markdown only hits that mark if you stick with a common variant.
+
+### Problem 3: Character counting
+
+In microblogging networks, the character limit is a somewhat defining feature. It should be a somewhat simple task to check that a post is under 300 characters, but guess what? You have to strip the syntax first.
+
+It's not a huge deal, but it's additional overhead to a check that should otherwise be simple.
+
+## Bluesky's answer: Richtext Facets
+
+Our answer was to use strings annotated by slices that point into the string.
+
+```javascript
+// slightly simplified
+{
+  text: "Hello @bob.com",
+  facets: [
+    {feature: "mention", index: {start: 6, end: 14}}
+  ]
+}
+```
+
+Data in the AT Proto is transmitted as JSON or CBOR. No custom parsing is required.
+
+If there's a facet-type your client doesn't understand, it's just ignored and the original text carries through. The example above would display "@bob.com" as normal text rather than a mention &mdash; no big deal. Character counting is likewise straight-forward.
+
+As an added bonus, if you want to use Markdown in your client, you absolutely can. You just need to run the parse step before publishing and turn the results into these facets.
+
+That's pretty much the whole deal.
+
+## Bonus discussion: maintaining intent
+
+In an example above, I showed an example of a post that violated intent.
+
+```
+oh man can you believe ||darth vader was luke's father?||
+```
+
+Bluesky's facets would avoid barfing the double bars, but it *wouldn't* stop the spoiler from being shown. That's not ideal.
+
+Back in 2022 I gave a talk about [Schema Negotiation](https://archive.org/details/27-09-45_schema_negotiation.qt) where I discussed this challenge. The interesting question is, can we create behavior fallbacks which can protect the original intent?
+
+For example, what if the spoiler facet could include an instruction saying "Hide this post if you don't understand this facet"? Or perhaps, give a warning that says "This post contains a spoiler"? 
+
+Something to think about.
+
+---
+
+<sup>1</sup> I'm partial to the idea of a `spoiler` facet.
+
+<sup>2</sup> I experienced all three of these problems while working on Secure Scuttlebutt. They are non-hypothetical.
