@@ -1,0 +1,234 @@
+---
+title: Why isn't Bluesky a peer-to-peer network?
+date: '2024-01-21'
+tags: ['atproto', 'bsky']
+draft: true
+summary: Today in "our novel form of NIH," why did Bluesky choose not to use a peer-to-peer network when designing the AT Protocol?
+images: ['/static/images/twitter-card.png']
+---
+
+It's a good idea to jot down a couple of notes on our decision-making at Bluesky. These notes won't be extensive. 
+
+Also in this series: 
+
+- [Why not RDF in the AT Protocol?](/blog/why-not-rdf)
+- [Why RichText facets in Bluesky](/blog/why-facets)
+
+## The 2014 generation of P2P
+
+The indie hacker spirit was strong in the NodeJS & Web community in 2014. There was a brief surge of interest in CouchDB and the potential for CouchApps. WebRTC had just stabilized and was being fiddled with.
+
+A couple of things then happened all at once:
+
+- Distributed systems theory became more mainstream
+- Bitcoin showed that novel protocols could make waves
+- DJB's [NaCl](https://en.wikipedia.org/wiki/NaCl_(software)) became widely available, and, with it, more compact public keys
+
+Devs discouraged with the Web began to look at BitTorrent and ask whether its networking model could be applied to other kinds of data-structures, and, if so, could p2p networks be useful for general computing in a way that BitTorrent is not?
+
+This led to the formation of [IPFS](https://en.wikipedia.org/wiki/InterPlanetary_File_System), [Secure Scuttlebutt](https://en.wikipedia.org/wiki/Secure_Scuttlebutt),  [Dat](https://en.wikipedia.org/wiki/Dat_(software)) and [WebTorrent](https://en.wikipedia.org/wiki/WebTorrent) at all roughly the same time.
+
+## The BitTorrent variants
+
+BitTorrent uses a Merkle Tree to represent datasets. This means that a torrent represents one static collection of files. Each project looked to replace the Merkle Tree with a new data structure which would still benefit from shared hosting and strong authentication while adding support for more dynamic data.
+
+<div className="flex gap-x-4 items-center">
+  <div className="w-12"><img src="/static/images/why-not-p2p/ipfs.png" className="my-0" /></div>
+  <h3 className="my-0">IPFS: the Merkle DAG</h3>
+</div>
+
+IPFS still focused on content-hashes, but essentially broke each chunk of data into its own torrent that could be cross-referenced by the hash. A public key or DNS name could point to a hash to support dynamism. It used a DHT to look up and connect machines.
+
+<div className="flex gap-x-4 items-center">
+  <div className="w-12"><img src="/static/images/why-not-p2p/ssb.png" className="my-0" /></div>
+  <h3 className="my-0">SSB: the append-only log</h3>
+</div>
+
+SSB used an append-only log which was modeled as a signed linked list. Back references were content-hashes, making the HEAD a rolling hash. It used a gossip model to distribute data and "pubs" to connect peers.
+
+<div className="flex gap-x-4 items-center">
+  <div className="w-12"><img src="/static/images/why-not-p2p/dat.png" className="my-0" /></div>
+  <h3 className="my-0">Dat: the merkle log</h3>
+</div>
+
+Dat also used a signed append-only log, but it used a merkle tree to reference nodes rather than a linked list. This gave a nice performance benefit over SSB, since it was able to verify signed heads against partial datasets using the tree structure. It used a DHT to look up and connect machines.
+
+## My personal timeline
+
+I bounced around between these projects and collected a number of lessons along the way. Here's a condensed view of it.
+
+<div className="relative flex gap-x-4">
+  <div className="absolute left-0 top-0 flex w-6 justify-center -bottom-6">
+    <div className="w-px bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+  <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white dark:bg-black">
+    <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+  </div>
+  <div>
+    <div className="text-xl font-bold">2014</div>
+    <div>
+      I joined the scene in 2014 by the good graces of Dominic Tarr, who allowed me to join him as the first application developer for SSB.
+    </div>
+  </div>
+</div>
+
+<div className="relative flex gap-x-4">
+  <div className="absolute left-0 top-0 flex w-6 justify-center -bottom-6">
+    <div className="w-px bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+  <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white dark:bg-black">
+    <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+  </div>
+  <div>
+    <div className="text-xl font-bold">2016</div>
+    <div>
+      I paired Electron with the Dat protocol and declared it a "peer-to-peer web browser." I then stuffed in APIs for reading and writing the p2p files and started pitching it as the [Beaker browser](https://en.wikipedia.org/wiki/Beaker_(web_browser)).
+    </div>
+  </div>
+</div>
+
+<div className="relative flex gap-x-4">
+  <div className="absolute left-0 top-0 flex w-6 justify-center -bottom-6">
+    <div className="w-px bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+  <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white dark:bg-black">
+    <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+  </div>
+  <div>
+    <div className="text-xl font-bold">2017</div>
+    <div>
+      Beaker supported the ability to "fork" p2p websites, so an indie social network called Rotonde briefly emerged on it where you created accounts by forking existing user sites. Simultaneously, the Beaker team created a Twitter clone on the tech called Fritter.
+    </div>
+  </div>
+</div>
+
+<div className="relative flex gap-x-4">
+  <div className="absolute left-0 top-0 flex w-6 justify-center -bottom-6">
+    <div className="w-px bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+  <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white dark:bg-black">
+    <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+  </div>
+  <div>
+    <div className="text-xl font-bold">2018-2020</div>
+    <div>
+      The Beaker team experimented heavily with baked-in APIs for interacting with user data on the Dat network. This included an indexer in the browser which would create computed views from user data.
+    </div>
+  </div>
+</div>
+
+<div className="relative flex gap-x-4">
+  <div className="absolute left-0 top-0 flex w-6 justify-center -bottom-6">
+    <div className="w-px bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+  <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white dark:bg-black">
+    <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+  </div>
+  <div>
+    <div className="text-xl font-bold">2021</div>
+    <div>
+      Discouraged with the outcomes thus far &mdash; for reasons I'll explain shortly &mdash; I embarked on the another social networking project CTZN [which I livestreamed](https://www.youtube.com/playlist?list=PLBND3AXbdG40F0KY9dDi5JzFBGceGvu0m). I began experimenting with hybrid p2p & server models.
+    </div>
+  </div>
+</div>
+
+<div className="relative flex gap-x-4">
+  <div className="absolute left-0 top-0 flex w-6 justify-center -bottom-1">
+    <div className="w-px bg-gray-200 dark:bg-gray-700"></div>
+  </div>
+  <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white dark:bg-black">
+    <div className="h-1.5 w-1.5 rounded-full bg-gray-100 ring-1 ring-gray-300"></div>
+  </div>
+  <div>
+    <div className="text-xl font-bold">2022</div>
+    <div>
+      I joined Bluesky with a pocket full of dreams and a huge backlog of ~failed projects~ learnings.
+    </div>
+  </div>
+</div>
+
+## What went right
+
+<img src="/static/images/why-not-p2p/good-job.png" className="my-1" />
+
+P2P makes some things extraordinarily easy. Beaker browser demoed one-click website creation and the ability to fork other people's sites. You could write entire applications as SPAs that would simply read & write files instead of relying on a server.
+
+Developers responded very positively to the ability to publish networked applications that don't require hosting and operations. FOSS enthusiasts were extremely happy to have a distribution system that matched their core ethos.
+
+The data structures built by each protocol evolved significantly. There were some very innovative improvements in each technology.
+
+We learned a huge amount about how to design large-scale applications against decentralized data-sources.
+
+## What went wrong
+
+<img src="/static/images/why-not-p2p/bad-job.png" className="my-1" />
+
+People won't sacrifice features for hypothetical improvements. The pure p2p model suffered from an introductions problem (how do two users meet for the first time?) and so reliable delivery of events such as replies or likes was never solved. It didn't take long to hit data-scales that an individual device couldn't manage.
+
+We never solved multi-device syncronization in a way that preserved the convenience of the technology. Same for key backup/sync.
+
+DHTs were not reliable or performant. We were way too optimistic about device discovery and NAT traversal.
+
+Doing everything on the user device opened new and difficult questions about resource management. When is it safe to clear cached data? How many connections can we keep open? How much CPU and RAM can our daemon eat before people notice? Mobile was a non-starter. 
+
+## How this synthesized for Bluesky
+
+<img src="/static/images/why-not-p2p/at-job.png" className="my-1" />
+
+By 2022, a number of us in the community had begun to re-examine our original premises from 2014. We generally agreed that device-hosted network software was simply infeasible, but we still saw a lot of potential in the data structures we had been using.
+
+### Hosting agility
+
+The general benefit from p2p we looked at preserving was hosting agility. Host-based addressing (the Web's traditional model) means that data published under a server's name becomes immovable from that server. Redirects may be suitable for an individual page, but large datasets will cross-reference records extensively and those references cannot be reliably migrated every time a user wants to move to a new server.
+
+The peer-to-peer networks we had been developing were designed for hosting agility. Published data is addressed under a cryptographic identifier and then resolved to a host at read-time. There's no reason that host resolution has to be via a DHT connecting user devices; it can instead resolve to always-online services, which is how we ended up designing the AT Protocol with the PDS (Personal Data Server).
+
+As our goal was to guard against lockin to social networking providers, this seemed like an obvious benefit.
+
+### Cryptographic structures
+
+User data is encoded in a cryptographic structure called a Merkle Search Tree which was chosen for optimal proof sizes. This is a direct carry-over from our peer-to-peer work, and is what drives hosting agility.
+
+In protocol terminology, we call this structure a "repository."
+
+The repositories are designed to be highly cacheable and efficient to replicate. The cryptographic structure makes it cheap to verify the authenticity; you can get some guarantee that it's canonical data without speaking directly to the PDS.
+
+A downside of this model is that the entirety of the repository is meant to be broadcast publicly. Selectively-shared data will require a separate channel within the protocol.
+
+### Host discovery
+
+Once we moved to the PDS model, the requirements for looking up hosts from cryptographic identifiers got less intense. A DHT maintains an unverified one-to-many table using a mesh of volunteer servers. The PDS model meant we could drop to a verified one-to-one table for finding the host of a given cryptograhic ID.
+
+Having spent a fair amount of pain debugging DHTs, we chose not to use a hosting mesh for these lookups either. Instead we created the `did:plc` registry service which uses a [Certificate-Transparency](https://certificate.transparency.dev/)-inspired cryptographic log for external auditing.
+
+For now, PLC stands for "Placeholder" because we're not in love with a single service model. We either want this registry to move into an ICANN-style org, or we want to use a closed, non-PoW blockchain<sup>2</sup> for multi-org consortium operation. The data structure is designed to work under either outcome.
+
+### Aggregation data modeling
+
+The data model we refined through the p2p era was an aggregation-based indexes. Users would subscribe to each others' datasets and ingest them into local indexes. Those local indexes could then be queried to provide a view of the application state.
+
+This works well because it preserves the fact that each user's own dataset is an isolated space. You don't have to coordinate permissions between users because they never transact on the same primary records; instead you treat each user as the sole owner of their dataset, producing interactions which then form a cumulative view. That's how a lot of social applications already work.
+
+This model also benefits from eventually-consistent convergence. Shared-ownership data requires transactional guarantees which behave unreliably in an open/decentralized WAN. While eventually-consistent comes with its own surprises (we've had a few conversations about whether a PDS is "read-sticky" or not) it tends to hide the performance costs of a global network well, and it preserves the independence of each user.
+
+With Bluesky, the major difference from our p2p work was deciding that these aggregations would happen via large services (the AppViews) rather than on each user's own infra (their PDS or their device). This makes it possible to provide the high-scale networking that people expect from social experiences.
+
+We felt comfortable with this approach in the context of our mission because the aggregators are kept separate from hosts, creating yet another form of agility. Anyone is free to spin up a new aggregator<sup>1</sup>, and they'll have access to the same datasets that everyone else has access to &mdash; a very Webby notion.
+
+## Not quite P2P, not quite Federation
+
+<img src="/static/images/why-not-p2p/hmm.png" className="my-1" />
+
+We ended up calling the AT Protocol a "federated" network because we couldn't think of a more appropriate term, but it's not really a kind of federation that anyone is familiar with. The peer-to-peer influence is too significant to neatly slot into that archetype. It also confuses with ActivityPub's model of federation which is now popularly understood.
+
+To the chagrin of my coworkers, I've begun calling this model *Internection*, a portmandeu of "inter-connection." I like that term because it reminds me of the whimsical nerdiness of the seventies, when people started using the term "hyperlink" and not batting an eye. I think the team might light my apartment on fire if I don't stop though.
+
+It might be even more accurate to call this a Cryptographic Data Web. Every user's data repository is, in essence, a website. The aggregating applications are, in essence, search spiders. The Web never quite mastered structured data for a variety of reasons; the AT Protocol embraces it fundamentally. Rather than fetching views from sites, you fetch records from users. Our aggregators produce data indexes rather than search pages.
+
+You can see why we settled on the name *AT Protocol*. In the technical sense, AT &mdash; Authenticated Transfer &mdash; references the use of the cryptographic structures, data which is inherently authenticated. In the social sense, the "AT" is the "@", the sygil for referencing the network's core primitive: users.
+
+---
+
+<sup>1</sup> It is not cheap to do so, but we did not discover any innovations in distributed indexing or querying that would enable cost sharing within a high-scale network. In essence, you're going to pay as much to run an AppView with 10mm users as you would a traditional service with 10mm users. You can cut users if you want to cut costs, or you can invent a federated query model that works. If you accomplish the later, let me know.
+
+<sup>2</sup> "Closed blockchains" are the unloved middle child of the crypto world, rejected by blockchain enthusiasts for not being decentralized enough, and ignored by everybody else for being too blockchainy. They were largely developed as a pitch to enterprises who wanted to tell their shareholders they had a blockchain strategy, and were accordingly abandoned when the bubble popped. Naturally, I think they're pretty interesting. I'll need to write about them more at some point, but for people who are vaguely concerned by this you should know that this tech doesn't involve proof-of-work or any kind of open market tokenomics, and is essentially a way to get multiple orgs to govern a dataset with low trust between each organization, which is something you might want for key distribution.
