@@ -1,0 +1,139 @@
+---
+title: Guidance on Authoring Lexicons
+date: '2025-03-27'
+tags: ['atproto', 'bsky']
+draft: false
+summary: At last weekend's Atmosphere Conference, there were a lot of questions about how author Lexicons. I thought it would be a good idea to share some guidance.
+images: ['/static/images/lexicon-guidance/card.png']
+---
+
+import Callout from '@/components/Callout'
+
+At last weekend's Atmosphere Conference, there were a lot of questions about how to author lexicons. I thought it would be a good idea to share some guidance.
+
+<img src="/static/images/lexicon-guidance/card.png" className="rounded" />
+
+## What is Lexicon?
+
+Lexicon is a schema definition tool. It establishes what data is expected in records or in RPC requests in the Atmosphere.
+
+Every lexicon has an owner, which is established by its ID. The `app.bsky.feed.post` schema is controlled by whoever holds the `feed.bsky.app` domain name.
+
+In general, it's wise not to break that schema. You *can*, but other programs may discard your data.
+
+## When should I use somebody else's lexicon?
+
+You should use an existing lexicon when you intend to interoperate.
+
+- If you intend to create posts that should show on Bluesky, then you should use the `app.bsky.feed.post` lexicon.
+- If you are creating posts but you don't expect them to show on Bluesky, then you should create your own lexicon.
+
+Remember also to never surprise your users. If they don't know they're creating a Bluesky post, then your software should not create a Bluesky post.
+
+<Callout>
+☝️ Read that section again. These are the key rules of Lexicon.
+</Callout>
+
+## Pay attention to intent
+
+Schemas are only interpretable in the context of working software. This is because data is the product of user actions. If a lexicon titled "Kick" is most commonly produced by a button that says "Hug," then it doesn't matter what the lexicon's name is &mdash; the data is a Hug!
+
+<Callout>
+"Follow" records created on a photosharing app are different than "Follow" records created on a microblogging app, even though they may look identical. You might want to reuse the definition, but you might not!<sup>1</sup>
+</Callout>
+
+We need to always think about user intent when using data. As a result, lexicon authoring should always be connected to working software.
+
+## Going "off-schema"
+
+You can add your own fields to a schema you don't control. These are commonly called "unspecced fields."
+
+However you should be aware of a couple things:
+
+- Unspecced fields are always "optional". The record needs to be meaningful if your unspecced field isn't present or understood.
+- The lexicon's owner may, at some point, add their own definition there which conflicts with yours.
+
+If that second point seems unlikely, guess what! It already happened. Bluesky added "pinned posts" to profiles and unintentionally clobbered unspecced uses of that field.
+
+## Never modify a constraint
+
+If you change a lexicon that you authored, you can't ever modify a constraint that previously existed. This means:
+
+- A required field cannot become optional
+- An optional field cannot become required
+- A newly-added field cannot be required
+- A field value type can't change
+- You can't change the minimum or maximum value ranges of a field
+
+If you need to do one of these things, you should create a new lexicon (eg `-v2`).
+
+<Callout>
+  The one change you can safely make is to add new optional fields to a schema.
+</Callout>
+
+## Assorted tips
+
+Here's a couple of additional thoughts shared by Dan Holmgren, based on our experience:
+
+- Err on the side of making properties optional rather than required, unless the given property really is absolutely essential.
+- It's a good idea to use open unions instead of refs. This enables extension or replacement in the future.
+- Always include input and output schemas in methods, even if it is an empty object for now. You may want to add fields later.
+- Wrap “views” of records in objects, in case you want to add more metadata to them.
+
+---
+
+That's it for my simple, straight-forward guidance. Now it's time to tackle a much more advanced understanding of Lexicon.
+
+---
+
+## What is Lexicon, really?
+
+Lexicon is a tool for facilitating social consensus in software design and operation. It helps you predict what other programs are going to do, and how data is most likely to be interpreted.
+
+Mass social behavior is the only real determinant of outcomes. If every app in atproto decided to interpret "Follows" as "Likes" on user accounts then, guess what? Follows are now Likes on user accounts. The ensuing realpolitik is twofold: who controls a lexicon definition, and who has the most users for a given lexicon. Those are levers of authority.
+
+We all have a strong incentive to work together and share a mental model for lexicons, because we're all trying to make working software. Predicting what each program will emit, and successfully executing transactions across our programs, is a group effort. Along that line, we all share a healthy dose of shame for a mistake; breaking other people's apps is always embarrassing.
+
+Lexicon schemas facilitate the real work of compatibility &mdash; social coordination. In the most simple form, the unsophisticated advice is: follow the schemas, and you won't face trouble. The better you understand the ecosystem, and what the other programs are doing/expecting, the more freely you can break from that advice. This is why one of the better tools we could introduce in the future is application usage analytics for the lexicons, and a forum for those app devs to communicate with each other.
+
+## Do what you want
+
+This applies in all forms:
+
+- Writing your own lexicons
+- Using existing lexicons
+- Creating community-owned lexicons
+- Ignoring my guidance, as it is just one engineer's perspective and will likely invalidate as we all learn more.
+
+There is no holy way or blessed practice. Don't let anybody badger you or claim moral superiority. We are all building software to have fun or do a job. ATProto and all of its pieces are tools to help you do that. If a tool doesn't give you the properties you need, then don't use it.
+
+If anybody ever tells you that it's important to use a specific lexicon because it's the "Right One," then tell them that they don't understand Lexicon and point them to this blogpost. The reason to use a given lexicon is because you want to unify the effects of your program with the effects of another program. That might not be your goal! You might not intend your "post" action to show up in another app's feed!
+
+That said: if you're going to diverge from the tools and guidance, you do need to understand the impact of what you're doing.
+
+I previously asserted you should "never modify a constraint" but that's not the whole truth. You actually can modify a constraint if you can sufficiently predict the impact to the majority of programs running on the network, and coordinate with all parties to affect the change. If you reasonably believe that all programs can be updated to address a constraint-change in a schema, then you can change that constraint.
+
+This is the subtle reality of lexicon: it's not a set of rules. It's a tool for helping developers predict the impact of their software. As a result, the only meaningful guidance is to know the impact of your software, work with others, and build accordingly.
+
+## What is the impact of diverging schemas?
+
+Lexicon schemas end up affecting two different things: record identity and record definition. When you use different schemas, then there's the potential for duplicate data to exist in a repository. For instance, if two kinds of "follows" exist, then two semantically-identical follow records might exist. This can cause issues; one app might interpret both, while another app only interprets one, and consequently doesn't keep them in sync.
+
+The solution to this isn't fun, but it is straightforward:
+
+1. Evaluate the impact of the issue and decide if it needs to be addressed. This requires some professional courtesy; you should consider the impact outside of your own software.
+2. Communicate with the other projects to make sure you fully understand the problem.
+3. Update your software to handle both schemas.
+
+Really the answer is just #3, but I'm making a point.
+
+Yes! That means that all of our software will, over time, accumulate a crufty baggage of multiple schemas for a given task! We shouldn't bend ourselves into pretzels trying to prevent this. **It is going to happen.** It's often a good idea to preplan a bit to reduce it happening, but it inevitably will happen.
+
+So what! So we have to write software to handle multiple schemas. It will, at times, be messy. If I had to guess, on a long enough timeline, the mess will lead to teams coming together to unify their schemas and fix the mess; even then, the legacy schemas will hang around, mocking us, adding codepaths.
+
+Embrace the mess. It's just part of the deal.
+
+---
+
+<sup>1</sup> Compatability and re-use is a strength of the Atmosphere. It is a good thing that you can re-use follows across applications, and there will be times where you want to. There will also be times where you don't want to. You can use your intuition about this. Would you want your Instagram follows to transfer to LinkedIn? Maybe instead you want to let your Instragram follows act as suggested follows. Just because you can interop doesn't mean you must.
+
