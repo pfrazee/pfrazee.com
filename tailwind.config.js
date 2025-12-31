@@ -32,7 +32,8 @@ module.exports = {
         DEFAULT: {
           css: {
             a: {
-              color: theme('colors.primary.500'),
+              fontWeight: '400',
+              textDecorationColor: theme('colors.gray.400'),
               '&:hover': {
                 color: `${theme('colors.primary.600')}`,
               },
@@ -53,7 +54,8 @@ module.exports = {
         invert: {
           css: {
             a: {
-              color: theme('colors.primary.500'),
+              fontWeight: '400',
+              textDecorationColor: theme('colors.gray.600'),
               '&:hover': {
                 color: `${theme('colors.primary.400')}`,
               },

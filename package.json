@@ -20,7 +20,7 @@
     "github-slugger": "^1.4.0",
     "gray-matter": "^4.0.2",
     "image-size": "1.0.0",
-    "next": "14.0.3",
+    "next": "14.2.35",
     "next-contentlayer": "0.3.4",
     "next-themes": "^0.2.1",
     "pliny": "0.1.6",
@@ -74,5 +74,10 @@
       "prettier --write"
     ]
   },
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "overrides": {
+    "next-contentlayer": {
+      "next": "$next"
+    }
+  }
 }
