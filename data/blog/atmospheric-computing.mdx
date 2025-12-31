@@ -1,0 +1,142 @@
+---
+title: Atmospheric Computing
+date: '2025-12-31T00:00:00-08:00'
+tags: ['atproto', 'bsky']
+draft: false
+summary: Building an interoperable world.
+images: ['/static/images/visions-of-the-atmosphere/card TODO.png']
+---
+
+import Callout from '@/components/Callout'
+
+This post is about the [AT Protocol](https://atproto.com). You can follow my work on [Bluesky](https://bsky.app/profile/pfrazee.com), [Blacksky](https://blacksky.community/profile/pfrazee.com), or any other Atmospheric social network.
+
+---
+
+Cloud computing won. It's convenient. It's everywhere. It scales. It's what we're all using.
+
+What is the cloud <sup>[1]</sup>? It stores your photos, runs your apps, and sends your messages. It's big computers run by big companies, administered by [professionals](https://knowyourmeme.com/memes/guy-looking-at-server) to handle the tech support.
+
+We talk about cloud computing as a paradigm. We mean that as opposed to connecting to each other directly — my phone to yours. We connect to the cloud, and it connects us to people.
+
+Is that a good thing? Well...
+
+<img src="/static/images/atmospheric-computing/mag-7.png" className="rounded mx-auto my-0" />
+<figcaption className="text-center">[Source](https://www.aol.com/finance/one-chart-shows-magnificent-7-203250310.html)</figcaption>
+
+It's [complicated](https://x.com/dril/status/473265809079693312?lang=en).
+
+From the personal computing perspective, the cloud has been a disaster. Having control of your identity, your friends, your platform, your e-shop, your privacy, that went whoops right out the window. The cloud neutered our computers for anything that requires a network. You can run your own programs locally, like a text editor, but if you want to connect to somebody, that lovely machine on your lap becomes just a portal to somebody else's better computer.
+
+And that may be galling, but seeing all of the Internet's economic winnings move into a handful of companies while AI actively threatens every well-paying profession is a pretty big concern too, to put it mildly. Somehow the liberation technology of computing seemed to liberate seven specific companies and nobody else.
+
+But we expect the Internet to be big and everywhere, and you can't really do that without big cloud computers, so what gives? Is the cloud the hero, or the villain?
+
+Well, I think it all went wrong when [XMPP](https://en.wikipedia.org/wiki/XMPP) and [Google Reader](https://en.wikipedia.org/wiki/Google_Reader) died. That was about the time that the big companies with big clouds realized they didn't have to share each others' networks anymore. They could just build their own big, proprietary networks that live entirely within their clouds and never interact with the other ones.
+
+So, sure, you could run your own personal cloud, but why? It's boxed out. It can't connect to anybody, and if it can't connect to anybody then you might as well not bother. In fact, the only chance you have is to make a successful app so that people join *your* big cloud, at which point you're just perpetuating the problem.
+
+And there's the crux of it: the clouds are closed, and if the clouds are closed then they'll do everything well **except interoperating with others**. But there's nothing that says clouds have to be closed. Closed networks are a big company thing, not a cloud thing. Perhaps you can see where I'm going with this.
+
+We need to bridge our clouds. It's as simple as that. I need to be able to run my cloud, and you can run your cloud, and our clouds need to talk.
+
+<img src="/static/images/atmospheric-computing/illus.png" className="" />
+
+## Atmospheric computing
+
+Let's define this thing:
+
+<Callout>
+Atmospheric computing is a paradigm of connected clouds.
+</Callout>
+
+We use "The Atmosphere" to describe the [AT Protocol](https://atproto.com)'s network. As the Atmosphere is the thing that clouds float within, the metaphor feels apt. <sup>[2]</sup>
+
+Connected clouds solve a lot of problems. You still have the always-on convenience, but you can also store your own data and run your own programs. It's personal computing, for the cloud.
+
+**The main benefit is interoperation.**
+
+You signed up to [Bluesky](https://bsky.app). You can just use that account on [Leaflet](https://leaflet.pub/). Both of them are on the Atmosphere.
+
+If Leaflet decides to show Bluesky posts, [they just can](https://lab.leaflet.pub/3mabsropbo22q). If Leaflet decides to create Bluesky posts, they just need to [use the right schema](https://github.com/bluesky-social/atproto/blob/main/lexicons/app/bsky/feed/post.json). The two apps don't need to talk to directly to do it. They both just talk to the users' account hosts.
+
+**Cooperative computing is possible.**
+
+The most popular algorithm on Bluesky is [For You](https://bsky.app/profile/spacecowboy17.bsky.social/feed/for-you). It's run by [Spacecowboy](https://bsky.app/profile/spacecowboy17.bsky.social) on *squints* his gaming PC.
+
+He ingests the firehose of public posts and likes and follows. Then the Bluesky app asks his server for a list of post URLs to render. The shared dataset means we can do deeply cooperative computing. An entirely third party service presents itself as first-party to Bluesky.
+
+**The "cold start" problem is resolved.**
+
+Tangled made a [Git and Jujitsu code hosting app](https://tangled.org/) that uses the same [user accounts](https://tangled.org/tangled.org) as a [Bluesky](https://bsky.app/profile/tangled.org). You could choose to [run Tangled yourself](https://docs.tangled.org/hacking-on-tangled.html#hacking-on-tangled) since it's [open source](https://tangled.org/tangled.org/core).
+
+Because Tangled is Atmospheric <sup>[3]</sup>, your self-hosted instance would see all of the same users and user activity as the first instance would.
+
+**The garden is unwalled.**
+
+[SelfHosted.social](https://selfhosted.social/) is an account hosting service. The self-hosted users show up like any other user. If I had to guess, most of them started on Bluesky hosts, and then used something like [PDS Moover](https://pdsmoover.com/) to migrate.
+
+**It's an open network.**
+
+In the Atmosphere, it does make sense to run a personal cloud, because your personal cloud can interoperate with other people's personal clouds. It can also interoperate with BobbyCorp's Big Bob Cloud, and the corner pie shop's Pie Cloud, and on it goes.
+
+## Atmospheric websites
+
+The Web is dead. Well, mostly dead. [There's a big difference between mostly dead and all dead](https://www.youtube.com/watch?v=d4ftmOI5NnI).
+
+A quirk of atproto is that we use domains for usernames. You're on [https://pfrazee.com](https://pfrazee.com) right now. My atmosphere is [at://pfrazee.com](https://pdsls.dev/at://pfrazee.com). You'll notice that the latter is just a database; no presentation layer. That's because presentation is the Web's jam. These things are made for each other.
+
+How about turning [Bluesky posts into a comments section](https://www.coryzue.com/writing/bluesky-comments/)? Or perhaps publishing your [blog posts via leaflet](https://pdsls.dev/at://did:plc:ragtjsm2j2vknwkz3zp4oxrd/pub.leaflet.document/3lzhmtognls2q) so that they syndicate, but then treating that like your database and rendering them on your site? Maybe let people [sign in with OAuth](https://atproto.com/guides/oauth) so they can access subscriber-only content. Perhaps people subscribe to your paid content on your site, and then you broadcast the receipt on the Atmosphere so that apps like Bluesky can show you're a subscriber?
+
+It basically comes down to how much data you want to pull. If you want to make your personal site a "Bluesky lite" so you can always see your friends' posts, then, yeah, you can do that.
+
+The reason that Substack found its feet is the same reason I care about Atmospheric sites: because it's a space that people really own. If you self-host your account and your site, you can get kicked off every app in the Atmosphere but you've still got that identity and that presence. Even as somebody that works at Bluesky and believes in good moderation, I think it's a good idea to have that kind of check on the social apps' power.
+
+## How does the Atmosphere work?
+
+<Callout>
+⚠️ It's about to get real technical. Non-engineers, skip this section.
+</Callout>
+
+The goal is this: bridge together the clouds' systems using the same high-scale techniques that [any cloud service might use](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/), but incorporate techniques akin to a [zero-trust architecture](https://en.wikipedia.org/wiki/Zero_trust_architecture) so that we can cooperate across organizational boundaries.
+
+Here are some points of inspiration:
+
+1. **Database replication across orgs**. [CouchDB](https://en.wikipedia.org/wiki/Apache_CouchDB) demonstrated powerful ideas with its database replication system. People were hosting entire apps hosted in the database which could be live-cloned between servers (CouchApps).
+2. **Large scale aggregation**. The Web showed us how to do decentralized publishing with large scale distribution: search engines. Google had to cut fat checks to counteract the fact that anybody else could create a competing search engine with the same data.
+3. **Interoperable data formats**. An engineer may not know much about RDF, but there's a decent chance they've used [schema.org](https://schema.org/) to get ["rich results"](https://developers.google.com/search/docs/appearance/structured-data/search-gallery) in Google. Look at that: structured data interoperation.
+4. **Authenticated data**. BitTorrent showed that you can gossip data around networks and prove the authenticity by looking at proofs instead of providers, making it possible to compose a network out of untrusted machines.
+
+We're going to be crossing the Internet, so we need to build around eventual consistency. Put the canonical databases in one server role: that's the user's personal data store. Use a document-store model (JSON) so that there's inherent colocation of related data (relational tables and graph triples won't work). Now produce a CDC log which anybody can consume. Sign the CDC events so that the log can be gossiped across org boundaries without having to do authenticity calls back to the origin.
+
+At this point, we've sharded the network; each user is one database. Within each database there's a strict serial order, but between the databases we only have causal ordering. We can link between user records with URLs and include content-hash checksums, to prove a happens-before relationship. The good news is, running this personal database will be very cheap.
+
+We bridge these shards together on the application side. Applications subscribe to the users' CDC logs and feed them into event handlers. As each record update comes in from the users, the apps updates their databases, creating aggregated views of the network. This can be any kind of database technology, but this is pretty similar to data-warehouse/analytical workloads, so OLAPs tend to fit well.
+
+Finally, we create a schema description language so apps can agree upon the record schemas and the API contracts. We'll really consider RDF, but then ultimately decide that JSON-schema has better developer affordances and build something pretty similar to that. After all, our database model is a JSON-document store, and our APIs exchange JSON too.
+
+That's what [AT Protocol](https://atproto.com) is.
+
+Users are hosted by account servers which in turn connect to Internet applications. The flow of connection remains client/server between user devices and the account hosts, but then operates peer-to-peer among other cloud services.
+
+## An interoperable world
+
+Atmospheric computing is about building an interoperable world. A cloud in that world can be big or small. It doesn't matter. A bigger cloud will do bigger things, and a smaller clouds will do smaller things. But they'll still talk.
+
+We need a collectivist answer to Big Tech. I'm not just interested in the battles of yesterday; if now is the time of AI, I want a personal AI running on my personal cloud. There is zero reason for us to all become subservient clients to American corporations. The model can change.
+
+[The path to a sovereign tech stack is via commodification](https://www.techpolicy.press/the-path-to-a-sovereign-tech-stack-is-via-a-commodified-tech-stack/). The AT Protocol stack is akin to Backend-as-a-Service; it standardizes identity, oauth flows, permissioning, data flows, and more. We are now working with the IETF to form a Working Group <sup>[4]</sup> and I believe a standard cloud platform is emerging in these specs.
+
+RIP 2025 but I won't say what the "P" stands for, and here's to a great 2026.
+
+[Follow me on Bluesky](https://bsky.app/profile/pfrazee.com).
+
+---
+
+**[1]** "What is the cloud?" People will fight with me over how broadly I defined it. I'm basically saying any kind of server-oriented computing is "the cloud." You can debate that choice if you want. We have our own PoPs at Bluesky and I'd still call that a cloud; it's just an on-prem cloud. The Bluesky API server is then an external-facing wrapper to that cloud, which *judo move* makes it the cloud too. Not good enough for you? This chair is the cloud. My cat is the cloud. The inevitable debate over the definition of the cloud is the cloud.
+
+**[2]** "That's the metaphor" and it's a pretty good one too considering that "Atmosphere" was an unplanned creation by a community member Shreyan punning off of [AT Protocol](https://atproto.com). What are the odds of that? Not only does it connect to "at protocol" and work as a descriptor of connected clouds, but it also relates thematically to "bluesky." As a chronic word inventor, my jealousy of Shreyan's accomplishment is immeasurable.
+
+**[3]** "The app is Atmospheric." Of, within, or having the quality of the Atmosphere. Nobody can stop me from just saying things.
+
+**[4]** "Working with the IETF." Shout out to the wonderful people that have been a part of that and who have helped guide us through the process.
