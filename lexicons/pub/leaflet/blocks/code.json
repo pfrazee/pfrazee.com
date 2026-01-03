@@ -1,0 +1,24 @@
+{
+  "id": "pub.leaflet.blocks.code",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "plaintext"
+      ],
+      "properties": {
+        "language": {
+          "type": "string"
+        },
+        "plaintext": {
+          "type": "string"
+        },
+        "syntaxHighlightingTheme": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

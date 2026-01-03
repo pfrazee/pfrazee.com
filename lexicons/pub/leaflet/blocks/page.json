@@ -1,0 +1,18 @@
+{
+  "id": "pub.leaflet.blocks.page",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,0 +1,115 @@
+{
+  "id": "pub.leaflet.pages.canvas",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "blocks"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "ref": "#block",
+            "type": "ref"
+          }
+        }
+      }
+    },
+    "block": {
+      "type": "object",
+      "required": [
+        "block",
+        "x",
+        "y",
+        "width"
+      ],
+      "properties": {
+        "x": {
+          "type": "integer"
+        },
+        "y": {
+          "type": "integer"
+        },
+        "block": {
+          "refs": [
+            "pub.leaflet.blocks.iframe",
+            "pub.leaflet.blocks.text",
+            "pub.leaflet.blocks.blockquote",
+            "pub.leaflet.blocks.header",
+            "pub.leaflet.blocks.image",
+            "pub.leaflet.blocks.unorderedList",
+            "pub.leaflet.blocks.website",
+            "pub.leaflet.blocks.math",
+            "pub.leaflet.blocks.code",
+            "pub.leaflet.blocks.horizontalRule",
+            "pub.leaflet.blocks.bskyPost",
+            "pub.leaflet.blocks.page",
+            "pub.leaflet.blocks.poll",
+            "pub.leaflet.blocks.button"
+          ],
+          "type": "union"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "rotation": {
+          "type": "integer",
+          "description": "The rotation of the block in degrees"
+        }
+      }
+    },
+    "quote": {
+      "type": "object",
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "end": {
+          "ref": "#position",
+          "type": "ref"
+        },
+        "start": {
+          "ref": "#position",
+          "type": "ref"
+        }
+      }
+    },
+    "position": {
+      "type": "object",
+      "required": [
+        "block",
+        "offset"
+      ],
+      "properties": {
+        "block": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "offset": {
+          "type": "integer"
+        }
+      }
+    },
+    "textAlignLeft": {
+      "type": "token"
+    },
+    "textAlignRight": {
+      "type": "token"
+    },
+    "textAlignCenter": {
+      "type": "token"
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,0 +1,46 @@
+{
+  "id": "pub.leaflet.blocks.image",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "image",
+        "aspectRatio"
+      ],
+      "properties": {
+        "alt": {
+          "type": "string",
+          "description": "Alt text description of the image, for accessibility."
+        },
+        "image": {
+          "type": "blob",
+          "accept": [
+            "image/*"
+          ],
+          "maxSize": 1000000
+        },
+        "aspectRatio": {
+          "ref": "#aspectRatio",
+          "type": "ref"
+        }
+      }
+    },
+    "aspectRatio": {
+      "type": "object",
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

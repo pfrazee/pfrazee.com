@@ -1,0 +1,30 @@
+{
+  "id": "pub.leaflet.blocks.header",
+  "defs": {
+    "main": {
+      "type": "object",
+      "required": [
+        "plaintext"
+      ],
+      "properties": {
+        "level": {
+          "type": "integer",
+          "maximum": 6,
+          "minimum": 1
+        },
+        "facets": {
+          "type": "array",
+          "items": {
+            "ref": "pub.leaflet.richtext.facet",
+            "type": "ref"
+          }
+        },
+        "plaintext": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

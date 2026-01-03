@@ -1,0 +1,107 @@
+{
+  "id": "pub.leaflet.publication",
+  "defs": {
+    "main": {
+      "key": "tid",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "icon": {
+            "type": "blob",
+            "accept": [
+              "image/*"
+            ],
+            "maxSize": 1000000
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "theme": {
+            "ref": "#theme",
+            "type": "ref"
+          },
+          "base_path": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "preferences": {
+            "ref": "#preferences",
+            "type": "ref"
+          }
+        }
+      },
+      "description": "Record declaring a publication"
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "refs": [
+            "pub.leaflet.theme.color#rgba",
+            "pub.leaflet.theme.color#rgb"
+          ],
+          "type": "union"
+        },
+        "accentText": {
+          "refs": [
+            "pub.leaflet.theme.color#rgba",
+            "pub.leaflet.theme.color#rgb"
+          ],
+          "type": "union"
+        },
+        "pageBackground": {
+          "refs": [
+            "pub.leaflet.theme.color#rgba",
+            "pub.leaflet.theme.color#rgb"
+          ],
+          "type": "union"
+        },
+        "backgroundColor": {
+          "refs": [
+            "pub.leaflet.theme.color#rgba",
+            "pub.leaflet.theme.color#rgb"
+          ],
+          "type": "union"
+        },
+        "backgroundImage": {
+          "ref": "pub.leaflet.theme.backgroundImage",
+          "type": "ref"
+        },
+        "accentBackground": {
+          "refs": [
+            "pub.leaflet.theme.color#rgba",
+            "pub.leaflet.theme.color#rgb"
+          ],
+          "type": "union"
+        },
+        "showPageBackground": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "properties": {
+        "showComments": {
+          "type": "boolean",
+          "default": true
+        },
+        "showInDiscover": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}
