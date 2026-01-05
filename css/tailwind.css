@@ -100,6 +100,9 @@
     & :where(code):not(pre code) {
       color: var(--color-indigo-500);
     }
+    & blockquote {
+      font-weight: 400;
+    }
   }
 
   .prose-invert {

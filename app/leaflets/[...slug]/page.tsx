@@ -1,26 +1,15 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
-import PageTitle from '@/components/PageTitle'
-import { components } from '@/components/MDXComponents'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { allBlogs, allLeaflets, allAuthors } from 'contentlayer/generated'
-import type { Authors, Blog } from 'contentlayer/generated'
-import PostSimple from '@/layouts/PostSimple'
+import type { Authors, Leaflet } from 'contentlayer/generated'
 import PostLayout from '@/layouts/PostLayout'
-import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
 import type {Post} from '../../helpers'
 import { sortPosts } from '../../helpers'
-
-const defaultLayout = 'PostLayout'
-const layouts = {
-  PostSimple,
-  PostLayout,
-  PostBanner,
-}
+import { LeafletRenderer } from '@/components/LeafletRenderer'
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string[] }>
@@ -34,17 +23,13 @@ export async function generateMetadata(props: {
     const authorResults = allAuthors.find((p) => p.slug === author)
     return authorResults as Authors
   })
-  if (post?.type !== 'Blog') {
+  if (post?.type !== 'Leaflet') {
     return
   }
 
-  const publishedAt = new Date(post.date).toISOString()
-  const modifiedAt = new Date(post.lastmod || post.date).toISOString()
+  const publishedAt = new Date(post.publishedAt).toISOString()
   const authors = authorDetails.map((author) => author.name)
-  let imageList = [siteMetadata.socialBanner]
-  if (post.images) {
-    imageList = typeof post.images === 'string' ? [post.images] : post.images
-  }
+  const imageList = [siteMetadata.socialBanner]
   const ogImages = imageList.map((img) => {
     return {
       url: img.includes('http') ? img : siteMetadata.siteUrl + img,
@@ -53,15 +38,15 @@ export async function generateMetadata(props: {
 
   return {
     title: post.title,
-    description: post.summary,
+    description: post.description,
     openGraph: {
       title: post.title,
-      description: post.summary,
+      description: post.description,
       siteName: siteMetadata.title,
       locale: 'en_US',
       type: 'article',
       publishedTime: publishedAt,
-      modifiedTime: modifiedAt,
+      modifiedTime: publishedAt,
       url: './',
       images: ogImages,
       authors: authors.length > 0 ? authors : [siteMetadata.author],
@@ -69,10 +54,11 @@ export async function generateMetadata(props: {
     twitter: {
       card: 'summary_large_image',
       title: post.title,
-      description: post.summary,
+      description: post.description,
       images: imageList,
     },
   }
+
 }
 
 export const generateStaticParams = async () => {
@@ -87,14 +73,14 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
 
   const allPosts: Post[] = sortPosts([...allBlogs, ...allLeaflets])
   const postIndex = allPosts.findIndex((p) => p.slug === slug)
-  if (postIndex === -1|| allPosts[postIndex].type !== 'Blog') {
+  if (postIndex === -1 || allPosts[postIndex].type !== 'Leaflet') {
     return notFound()
   }
 
   const prev = allPosts[postIndex + 1]
   const next = allPosts[postIndex - 1]
-  const post = allBlogs.find((p) => p.slug === slug) as Blog
-  const authorList = post?.authors || ['default']
+  const post = allPosts.find((p) => p.slug === slug) as Leaflet
+  const authorList = ['default']
   const authorDetails = authorList.map((author) => {
     const authorResults = allAuthors.find((p) => p.slug === author)
     return authorResults as Authors
@@ -108,17 +94,18 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
     }
   })
 
-  const Layout = layouts[post.layout || defaultLayout]
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
-        <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
-      </Layout>
+      <PostLayout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
+        <p className="bg-gray-100 dark:bg-gray-800 font-mono px-4 py-2 rounded text-sm">
+          Posted via <a href={`https://pfrazee.leaflet.pub/${slug}`} target="_blank">Leaflet</a>
+        </p>
+        <LeafletRenderer pages={post.pages} />
+      </PostLayout>
     </>
   )
 }

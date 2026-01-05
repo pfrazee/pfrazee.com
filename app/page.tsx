@@ -1,9 +1,9 @@
 import { sortPosts, allCoreContent } from 'pliny/utils/contentlayer'
-import { allBlogs } from 'contentlayer/generated'
+import { allBlogs, allLeaflets } from 'contentlayer/generated'
 import Main from './Main'
+import { asBlog } from './helpers'
 
 export default async function Page() {
-  const sortedPosts = sortPosts(allBlogs)
-  const posts = allCoreContent(sortedPosts)
+  const posts = allCoreContent(sortPosts(allBlogs.concat(allLeaflets.map(asBlog))))
   return <Main posts={posts} />
 }

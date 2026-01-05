@@ -16,11 +16,13 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": ".",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@/components/*": ["components/*"],
       "@/data/*": ["data/*"],
       "@/layouts/*": ["layouts/*"],
       "@/css/*": ["css/*"],
+      "@/util/*": ["util/*"],
       "contentlayer/generated": ["./.contentlayer/generated"]
     },
     "plugins": [

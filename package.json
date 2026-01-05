@@ -5,13 +5,15 @@
   "scripts": {
     "start": "next dev",
     "dev": "cross-env INIT_CWD=$PWD next dev",
-    "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "build": "node --experimental-strip-types ./scripts/fetch-leaflets.ts && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
     "postinstall": "node ./scripts/postinstall.mjs"
   },
   "dependencies": {
+    "@atproto/identity": "^0.4.10",
+    "@atproto/lex": "^0.0.8",
     "@next/bundle-analyzer": "15.2.4",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/postcss": "^4.0.5",

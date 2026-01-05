@@ -26,7 +26,7 @@ const root = process.cwd()
 const isProduction = process.env.NODE_ENV === 'production'
 
 const computedFields: ComputedFields = {
-  readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body.raw) },
+  readingTime: { type: 'json', resolve: (doc) => readingTime(doc.body?.raw || '') },
   slug: {
     type: 'string',
     resolve: (doc) => doc._raw.flattenedPath.replace(/^.+?(\/)/, ''),
@@ -39,7 +39,7 @@ const computedFields: ComputedFields = {
     type: 'string',
     resolve: (doc) => doc._raw.sourceFilePath,
   },
-  toc: { type: 'string', resolve: (doc) => extractTocHeadings(doc.body.raw) },
+  toc: { type: 'string', resolve: (doc) => extractTocHeadings(doc.body?.raw || '') },
 }
 
 /**
@@ -110,6 +110,38 @@ export const Blog = defineDocumentType(() => ({
   },
 }))
 
+
+export const Leaflet = defineDocumentType(() => ({
+  name: 'Leaflet',
+  filePathPattern: 'leaflets/**/*.json',
+  contentType: 'data',
+  fields: {
+    $type: { type: 'string' },
+    title: { type: 'string', required: true },
+    description: { type: 'string' },
+    publishedAt: { type: 'date', required: true },
+    pages: {type: 'json', required: true },
+    publication: { type: 'string' },
+    author: { type: 'string' },
+    postRef: { type: 'json' },
+  },
+  computedFields: {
+    ...computedFields,
+    structuredData: {
+      type: 'json',
+      resolve: (doc) => ({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: doc.title,
+        datePublished: doc.publishedAt,
+        dateModified: doc.publishedAt,
+        description: doc.description,
+        url: `${siteMetadata.siteUrl}/${doc._raw.flattenedPath}`,
+      }),
+    },
+  },
+}))
+
 export const Authors = defineDocumentType(() => ({
   name: 'Authors',
   filePathPattern: 'authors/**/*.mdx',
@@ -130,7 +162,7 @@ export const Authors = defineDocumentType(() => ({
 
 export default makeSource({
   contentDirPath: 'data',
-  documentTypes: [Blog, Authors],
+  documentTypes: [Blog, Authors, Leaflet],
   mdx: {
     cwd: process.cwd(),
     remarkPlugins: [
