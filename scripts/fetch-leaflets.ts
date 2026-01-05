@@ -44,7 +44,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
   // Write the leaflets to `/data/leaflets/*.json`
   const leafletDataDir = path.join(__dirname, '..', 'data', 'leaflets')
-  await fsp.rm(leafletDataDir, {recursive: true})
+  if ((await fsp.stat(leafletDataDir).catch(e => undefined))) {
+    await fsp.rm(leafletDataDir, {recursive: true})
+  }
   await fsp.mkdir(leafletDataDir).catch(e => undefined)
   for (const leaflet of leaflets) {
     const rkey = leaflet.uri.split('/').pop()
