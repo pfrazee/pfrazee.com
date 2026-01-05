@@ -47,6 +47,9 @@ function LeafletBlock({block}: {block: linearDocument.Block}) {
   if (blocks.bskyPost.main.$matches(innerBlock)) {
     return <LeafletBlockBskyPost block={innerBlock} />
   }
+  if (blocks.code.main.$matches(innerBlock)) {
+    return <LeafletBlockCode block={innerBlock} />
+  }
   console.warn('Warning! Unhandled block in leaflet', innerBlock.$type, innerBlock)
   return <div><strong>TODO: {innerBlock.$type}</strong></div>
 }
@@ -118,6 +121,12 @@ function LeafletBlockImage({block}: {block: blocks.image.Main}) {
 function LeafletBlockBskyPost({block}: {block: blocks.bskyPost.Main}) {
   return (
     <BlueskyPostEmbed uri={block.postRef.uri} cid={block.postRef.cid} />
+  )
+}
+
+function LeafletBlockCode({block}: {block: blocks.code.Main}) {
+  return (
+    <pre><code  className={`code-highlight language-${block.language}`}>{block.plaintext}</code></pre>
   )
 }
 
