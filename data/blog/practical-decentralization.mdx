@@ -7,19 +7,15 @@ summary: The point of decentralization is to guarantee the rights of individuals
 images: ['/static/images/practical-decentralization/card.png']
 ---
 
-Last weekend Bluesky got hit with another critique from a competing protocol&apos;s ecosystem. This happens on a pretty regular schedule, and while I really don&apos;t like getting into these debates, I felt compelled to write up some thoughts.
+Last weekend, atproto got hit with another critique from a competing protocol. This happens on a pretty regular basis, and I felt compelled to write up some thoughts.
 
-Atproto tends to get compared to two different technologies: ActivityPub and Nostr. This may be because they&apos;re the most prominent open social networks out there at the moment, but when I think back on it, Farcaster has been around for a while and we never caught hands from them. It made me wonder if there might be a reason for this.
-
-And I think there is a reason.
+We tend to get compared to two different technologies: ActivityPub and Nostr. This may be because they&apos;re prominent, but I think there might be a deeper reason.
 
 ## The two common protocol models
 
 The two common protocol models are “federated hosts” and “magical meshes.”
 
 ![fed-and-mesh.png](/static/images/practical-decentralization/fed-and-mesh.png)
-
-Which techs are which?
 
 The “federated hosts” model is what people think of with federation. The most notable examples are email and Activity Pub. They typically involve messages being passed between servers.
 
@@ -57,7 +53,7 @@ Info civics is a practice of tensions:
 - On the one hand, you need to achieve your ideological aims; you need to create a protocol that guarantees individual and community rights.
 - On the other hand, you need to produce usable software; you need it to perform well, fit the use case, and resolve problems as they arise.
 
-The initial atproto team spent 25 collective years — if you add up each individual&apos;s time — on magical meshes, including IPFS, Dat, SSB, and Filecoin. As much as we loved them, we couldn&apos;t get past the problems of usable software.<sup>2</sup>
+The initial atproto team spent 25 collective years on magical meshes, including IPFS, Dat, SSB, and Filecoin. As much as we loved them, we couldn&apos;t get past the problems of usable software.<sup>2</sup>
 
 Good protocol design requires balancing the tensions of ideology and practicality.
 
@@ -71,67 +67,71 @@ As the number of interacting users increases, the personal computing metaphor be
 
 ## Power must be addressed
 
-Federated instances creates freedom to choose between competing instances. This is partially a freedom of association, but the substantive right is choice. It&apos;s a free market solution to governance problems &emdash; which is good. The more important thing is, federation works more reliably. Email and ActivityPub are immensely more viable than the magical meshes for large scale social computing.
+Federation creates freedom to choose between competing instances. This is partially a freedom of association, but the substantive right is choice. It&apos;s a free market solution to governance problems &mdash; which is good. The more important thing is, federation works more reliably. Email and ActivityPub are immensely more viable than the magical meshes for large scale social computing.
 
-But, you have the power problem: Popular instances become runaway winners.
+But, you have the power problem. Popular instances become runaway winners.
 
-The ability to migrate between hosts helps, and adds pressure on the hosts to keep users happy. Unfortunately, email doesn&apos;t have account migration, and ActivityPub only has a weak form which can&apos;t migrate all activity (though I believe they&apos;re working on it).
+The ability to migrate between hosts helps, and it adds pressure on the hosts to keep users happy. Unfortunately, email doesn&apos;t have account migration, and ActivityPub only has a weak form which can&apos;t migrate all activity (though I believe they&apos;re working on it).
 
 A second problem with traditional federation is a lack of modularity. Hosting, distribution, moderation, algorithms, and business logic are located in the hosting instance. This creates a weak separation of powers. Ideally, users reduce the power of a popular instance by devolving specific functions to other providers. We want to preserve rights in the default course of operation; separating powers helps achieve that.
 
 ## The magical federated mesh
 
-So, we created a hybrid.
+I mentioned that atproto is both models, and neither. More specifically, it's a hybrid.
 
 ![magical-federated-mesh.png](/static/images/practical-decentralization/magical-federated-mesh.png)
 
-In short: we took all our prior work on p2p and moved it onto servers to create atproto.<sup>4</sup> A heresy to both camps, and the most practical approach we could find for decentralization.
+We took all our prior work on p2p and moved it onto servers to create atproto.<sup>4</sup> A heresy to both camps, this was the most practical approach we could find for decentralization.
 
 Practicality:
 
-- The use of servers simplifies operational challenges that are common with p2p or blockchains, like reliability uptime, device sync, and key management.
+- The use of servers simplifies operational challenges that are common with p2p or blockchains, like reliable uptime, device sync, and key management.
 - Building for large aggregating indexes enabled the UX people expect from public social media.
 
 Ideology:
 
-- User-addressed content ensured smooth migrations from popular hosts.
+- User-addressed content ensures smooth migrations from popular hosts.
 - A shared data space enables modularity, separating powers away from the popular hosts.
 
-What does this mean in practice? I have an (unflattering) example.
+What does this mean in practice? I have an unflattering example.
 
-Last fall [the Bluesky team discovered that a lingering TODO in our moderation stack](https://pfrazee.leaflet.pub/3lz4sgu7iec2k) which meant that suspensions/bands were *unhosting* users (at the PDS level) when we meant to be *filtering* them (removing from the Bluesky app). We&apos;ve since made progress on fixing that — there are still some cases to resolve — but here&apos;s what matters:
+Last fall the Bluesky team discovered a [lingering TODO in our moderation stack](https://pfrazee.leaflet.pub/3lz4sgu7iec2k) which meant that suspensions were *unhosting* users (at the PDS level) when we meant to be *filtering* them (removing from the Bluesky app). We&apos;ve since made progress on fixing that — there are still some cases to resolve — but here&apos;s what matters:
 
 Users on other PDS hosts weren&apos;t affected by this mistake. Bluesky had no ability to unhost those users, because we never hosted them in the first place. Their right to hosting was protected.
 
-## The secret third thing
+This is the specific goal of decentralization. It devolves power away from businesses and into the hands of the individual or community.
+
+## Atproto, the secret third model
 
 Our similarity to the two common models of decentralization is at least partially why we catch so much heat from them. We&apos;re really similar, but we introduced these changes that destroy the legible markers of each technology: multiple app instances in the case of federation, and an absence of servers in the case of magical meshes.
 
-Go back to my section, “The purpose of protocols.” What is it? To guarantee the rights of individuals and communities.
+What is the purpose of protocols? To guarantee the rights of individuals and communities.
 
-I want there to be more Bluesky competitors on atproto, but I&apos;m way less fussed about it than I am over the question of self-hosting the accounts. We intentionally made self-hosting cheap to do, because we knew that the PDS would actively take power away from the applications. More Bluesky instances would counteract our ability to control reach in the microblogging usecase, which would also be good, but the costs are high enough for full-network apps that I get why it&apos;s slow to happen.
+I want there to be more Bluesky competitors on atproto, but I&apos;m way less fussed about that than I am over self-hosting the accounts. We intentionally made self-hosting cheap to do, because we knew that the PDS would actively take power away from the applications. More Bluesky instances would counteract our ability to control reach in the microblogging usecase, which would also be good, but the costs are high enough for full-network apps that I get why it&apos;s slow to happen.
 
-There are still challenges in front of atproto. Bluesky is still too large of a player. We need to finish moving PLC into an independent org (we&apos;re close!). Relays are now cheap, but large scale “appviews” — the aggregating backends of apps — are still a bit too expensive and a bit too difficult to write, and we&apos;ve been jammed up on open-sourcing our highscale backend. The revenue story is still unsolved.
+There are still challenges in front of atproto. Bluesky is still too large of a player. We need to finish moving PLC into an independent org (we&apos;re close!). Relays are now cheap, but large scale “appviews” — the aggregating backends of apps — are still a bit too expensive and a bit too difficult to write, and we&apos;ve been jammed up on open-sourcing our high scale backend. The revenue story is still unsolved.
 
 Do I worry about those problems? Of course I do. But am I confident we&apos;ll solve them? Absolutely.
 
-Atproto isn&apos;t federation. It isn&apos;t p2p. It isn&apos;t blockchains. It&apos;s a direct attempt at practical decentralization, tradeoffs and all. We sacrificed properties of the magical mesh to hit the performance needs, and we broke from the history of federation to get the properties we need.
+Atproto isn&apos;t federation. It isn&apos;t p2p. It isn&apos;t blockchains. It&apos;s a direct attempt at practical decentralization, tradeoffs and all. We sacrificed properties of the magical mesh to hit the performance needs, and we broke from the history of federation to get the guarantees we wanted.
 
 Those were the trades we made, and I think they were the right ones.
 
 ---
 
-1 It&apos;s obvious that the technologies have ideological angles:
+**1** It&apos;s obvious that the technologies have ideological angles:
 
 - Magical meshes: libertarian, individualist, anarchist.
 - Federated hosts: market choice, collectivism.
 
 If you break them down, you can figure out the assignment of rights in each of these systems. For bonus points, you can even try to figure out [who has the right to change a blockchain&apos;s protocol](https://paulfrazee.medium.com/the-rules-to-make-the-rules-be0c3b9d92b6).
 
-2 I wrote a [pretty extensive post-mortem on Beaker Browser](https://github.com/beakerbrowser/beaker/blob/master/archive-notice.md).
+**2** I wrote a [pretty extensive post-mortem on Beaker Browser](https://github.com/beakerbrowser/beaker/blob/master/archive-notice.md).
 
-3 Blockchains try to solve this governance question. They maintain individual rights within collective resources by leveraging code-as-law. That makes them inherently interesting from an infocivics perspective, but unfortunately they can only govern the state of shared ledgers, and barring more advances in ZK proofs they can&apos;t govern the derived data which an index maintains. Put another way, most people accessed Ethereum via Infura, and Infura is not on-chain. Blockchains also have yet to solve their write throughput and transaction cost problems, and until that&apos;s resolved they&apos;re not ready for prime-time.
+**3** Blockchains try to solve the governance question. They maintain individual rights within collective resources by leveraging code-as-law. That makes them inherently interesting from an infocivics perspective, but unfortunately they can only govern the state of shared ledgers, and barring more advances in ZK proofs they can&apos;t govern the derived data which an index maintains.
 
-4 The primary interface to atproto is the data space, addressed by `at://` URIs. Like a magical mesh, the data space addresses content by user — not by host. Despite the fact I don&apos;t run my own server, my content is addressed under `at://pfrazee.com/...`. This abstracts the host, and consequently enables full and (relatively) painless account migrations.
+Put another way, most people accessed Ethereum via Infura, and Infura is not on-chain. Blockchains also have yet to solve their write throughput and transaction cost problems, and until that&apos;s resolved they&apos;re not ready for prime-time.
 
-Atproto signs that content and then broadcasts it as widely as possible. Whether from my hosting server of via a relay, the receivers build a cache of the activity in the shared data space. This enables modularity. Various services — algorithms, moderators, apps, etc — can easily coordinate on the shared data space.
+**4** The primary interface to atproto is the data space, addressed by `at://` URIs. Like a magical mesh, the data space is addressed by the user — not by the host. Despite the fact I don&apos;t run my own server, my content is addressed under `at://pfrazee.com/...`. This abstracts the host, and consequently enables full and (relatively) painless account migrations.
+
+Atproto then signs that content and broadcasts it as widely as possible. Whether from my hosting server of via a relay, the receivers build a cache of the activity in the shared data space. This enables modularity. Various services — algorithms, moderators, apps, etc — can easily coordinate on the shared data space.
