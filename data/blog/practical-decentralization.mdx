@@ -7,11 +7,35 @@ summary: The point of decentralization is to guarantee the rights of individuals
 images: ['/static/images/practical-decentralization/card.png']
 ---
 
-Last weekend, atproto got hit with another critique from a competing protocol. This happens on a pretty regular basis, and I felt compelled to write up some thoughts.
+import Callout from '@/components/Callout'
 
-We tend to get compared to two different technologies: ActivityPub and Nostr. This may be because they&apos;re prominent, but I think there might be a deeper reason.
+[The AT protocol](https://atproto.com) tends to get compared to two different technologies: ActivityPub and Nostr. Both are good examples of "federated hosts" and "magical meshes," respectively.
 
-## The two common protocol models
+Atproto draws inspiration from both of those models, but it works like neither. This can lead to some confusion that I think we can clear up.
+
+<Callout>
+  I've done my best to correctly describe each protocol, but if any of my information is out of date, please let me know so I can correct.
+</Callout>
+
+## The purpose of protocols
+
+The point of decentralization is to guarantee the rights of individuals and communities on the Internet.
+
+It&apos;s often noted, the average user doesn&apos;t care about decentralization. That&apos;s true: what they care about is what their algorithm does, or what moderation does, or whether their data is getting tracked, and so on.
+
+Who has the right to…
+
+- Host (or unhost) the data
+- Platform (or deplatform) user speech
+- Write new applications or features
+- Implement feed and search algorithms
+- Collect user behavior
+- Place ads
+- etc
+
+We use protocols to structure who can do what. Protocol designs are often about the how, but the consequence of the how is an authority model.
+
+## The common models
 
 The two common protocol models are “federated hosts” and “magical meshes.”
 
@@ -26,24 +50,6 @@ The “magical mesh” model is what people think of with p2p and blockchains. T
 
 If these are the common models, then which one is atproto? The answer is both. Or neither. It depends on how you look at it.
 
-## The purpose of protocols
-
-The point of decentralization is to guarantee the rights of individuals and communities on the Internet.
-
-It&apos;s often noted, the average user doesn&apos;t care about decentralization. That&apos;s true: what they  care about is what their algorithm does, or what moderation does, or whether their data is getting tracked, and so on.
-
-Who has the right to…
-
-- Host (or unhost) the data
-- Platform (or deplatform) user speech
-- Write new applications or features
-- Implement feed and search algorithms
-- Collect user behavior
-- Place ads
-- etc
-
-We use protocols to structure who can do what. Protocol designs are often about the how, but the consequence of the how is an authority model.
-
 ## Balancing ideology and practicality
 
 I&apos;ve been trying to coin a term for the decentralization as a practice: [Information Civics](https://github.com/pfrazee/infocivics), a marriage of software engineering and civic design. <sup>1</sup>
@@ -57,7 +63,7 @@ The initial atproto team spent 25 collective years on magical meshes, including 
 
 Good protocol design requires balancing the tensions of ideology and practicality.
 
-## Scale must be addressed
+## Scale
 
 A logical extension of personal computing is a belief that everyone ought to possess maximal personal rights and make all decisions on their own.
 
@@ -65,23 +71,23 @@ This view runs into scale problems. One-way broadcast is relatively easy to make
 
 As the number of interacting users increases, the personal computing metaphor becomes less applicable. You inevitably need to maintain indexes of aggregate data on behalf of the users. Once you introduce shared resources (the indexes) then you need to govern those resources. This is where pure p2p falls down; it has no answer for the governance of shared resources. <sup>3</sup>
 
-## Power must be addressed
+## Power
 
 Federation creates freedom to choose between competing instances. This is partially a freedom of association, but the substantive right is choice. It&apos;s a free market solution to governance problems &mdash; which is good. The more important thing is, federation works more reliably. Email and ActivityPub are immensely more viable than the magical meshes for large scale social computing.
 
 But, you have the power problem. Popular instances become runaway winners.
 
-The ability to migrate between hosts helps, and it adds pressure on the hosts to keep users happy. Unfortunately, email doesn&apos;t have account migration, and ActivityPub only has a weak form which can&apos;t migrate all activity (though I believe they&apos;re working on it).
+The ability to migrate between hosts puts pressure on the hosts to keep users happy. Unfortunately, email doesn&apos;t have account migration, and ActivityPub can&apos;t migrate all activity (though I believe they&apos;re working on it).
 
-A second problem with traditional federation is a lack of modularity. Hosting, distribution, moderation, algorithms, and business logic are located in the hosting instance. This creates a weak separation of powers. Ideally, users reduce the power of a popular instance by devolving specific functions to other providers. We want to preserve rights in the default course of operation; separating powers helps achieve that.
+Also: Traditional federation lacks modularity. Hosting, distribution, moderation, algorithms, and business logic are located in the hosting instance. This creates a weak separation of powers. Ideally, users reduce the power of a popular instance by devolving specific functions to other providers. We want to preserve rights in the default course of operation; separating powers helps achieve that.
 
 ## The magical federated mesh
 
-I mentioned that atproto is both models, and neither. More specifically, it's a hybrid.
+The atproto is both models and neither. More specifically, it's a hybrid.
 
 ![magical-federated-mesh.png](/static/images/practical-decentralization/magical-federated-mesh.png)
 
-We took all our prior work on p2p and moved it onto servers to create atproto.<sup>4</sup> A heresy to both camps, this was the most practical approach we could find for decentralization.
+We took all our prior work on p2p and moved it onto servers to create atproto.<sup>4</sup> It was the most practical approach we could find for decentralization.
 
 Practicality:
 
@@ -93,21 +99,23 @@ Ideology:
 - User-addressed content ensures smooth migrations from popular hosts.
 - A shared data space enables modularity, separating powers away from the popular hosts.
 
-What does this mean in practice? I have an unflattering example.
+What does this mean in practice?
 
-Last fall the Bluesky team discovered a [lingering TODO in our moderation stack](https://pfrazee.leaflet.pub/3lz4sgu7iec2k) which meant that suspensions were *unhosting* users (at the PDS level) when we meant to be *filtering* them (removing from the Bluesky app). We&apos;ve since made progress on fixing that — there are still some cases to resolve — but here&apos;s what matters:
+Last fall the Bluesky team discovered a [lingering TODO in our moderation stack](https://pfrazee.leaflet.pub/3lz4sgu7iec2k) which meant that suspensions were *unhosting* users (at the PDS level) when we meant to be *filtering* them (removing from the Bluesky app). We&apos;ve since made progress on fixing that — there are still some cases to resolve.
+
+Here&apos;s what matters:
 
 Users on other PDS hosts weren&apos;t affected by this mistake. Bluesky had no ability to unhost those users, because we never hosted them in the first place. Their right to hosting was protected.
 
-This is the specific goal of decentralization. It devolves power away from businesses and into the hands of the individual or community.
+This is the specific goal of decentralization. It devolves power away from businesses and into the hands of individuals and communities.
 
 ## Atproto, the secret third model
 
-Our similarity to the two common models of decentralization is at least partially why we catch so much heat from them. We&apos;re really similar, but we introduced these changes that destroy the legible markers of each technology: multiple app instances in the case of federation, and an absence of servers in the case of magical meshes.
+Our near-miss similarity to the two common models of decentralization is at least partially why we catch heat from them. We&apos;re really similar, but we introduced changes that remove the legible markers of each technology: multiple app instances in the case of federation, and an absence of servers in the case of magical meshes.
 
 What is the purpose of protocols? To guarantee the rights of individuals and communities.
 
-I want there to be more Bluesky competitors on atproto, but I&apos;m way less fussed about that than I am over self-hosting the accounts. We intentionally made self-hosting cheap to do, because we knew that the PDS would actively take power away from the applications. More Bluesky instances would counteract our ability to control reach in the microblogging usecase, which would also be good, but the costs are high enough for full-network apps that I get why it&apos;s slow to happen.
+I want there to be more Bluesky competitors on atproto, but I&apos;m way less fussed about that than I am over self-hosting the accounts and a plurality of different types of apps. We intentionally made self-hosting cheap to do, because we knew that the PDS would actively take power away from the applications. More Bluesky app instances would counteract our ability to control reach in the microblogging usecase, which is also important, but the costs are high enough for full-network apps that I get why it&apos;s slow to happen. Shout out to Blacksky, Northsky, Eurosky, and others for taking that on.
 
 There are still challenges in front of atproto. Bluesky is still too large of a player. We need to finish moving PLC into an independent org (we&apos;re close!). Relays are now cheap, but large scale “appviews” — the aggregating backends of apps — are still a bit too expensive and a bit too difficult to write, and we&apos;ve been jammed up on open-sourcing our high scale backend. The revenue story is still unsolved.
 
