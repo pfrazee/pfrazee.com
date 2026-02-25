@@ -7,7 +7,7 @@
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+  --font-sans: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   /* Colors */
@@ -80,6 +80,8 @@
 
 @layer utilities {
   .prose {
+    letter-spacing: 0.2px;
+    
     & a {
       text-decoration-color: var(--color-gray-400);
       font-weight: 400;
